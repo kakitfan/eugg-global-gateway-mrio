@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: "EU Global Gateway MRIO Carbon Inequality Model"
+message: "If you use this code, please cite the repository."
+type: software
+authors:
+  - name: "kakitfan"
+version: "0.1.0"
+date-released: "2026-05-31"
+repository-code: "https://github.com/kakitfan/eugg-global-gateway-mrio"
+license: MIT
