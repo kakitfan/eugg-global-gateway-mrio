@@ -1,6 +1,6 @@
 % =========================================================================
-% EUGG_Analysis_V6_0.m  |  Extended Theil decomposition analysis
-% Run AFTER EUGG_model_V6_0.m (requires EUGG_Results.xlsx + EUGG_Workspace.mat)
+% EUGG_analysis.m  |  Extended Theil decomposition analysis
+% Run AFTER EUGG_model.m (requires EUGG_Results.xlsx + EUGG_Workspace.mat)
 %
 % Outputs (new Excel sheets appended to EUGG_Results.xlsx):
 %   10_Between_Contrib   - Per-country T_between contribution: s_c * ln(s_c/p_c)
@@ -237,7 +237,7 @@ end
 
 %% Summary report
 fprintf('=================================================================\n');
-fprintf('  EUGG_Analysis_V6_0 complete\n');
+fprintf('  EUGG_analysis complete\n');
 fprintf('=================================================================\n');
 fprintf('Sheets written: 10_Between_Contrib, 10b_Between_Ranked,\n');
 fprintf('                11_IncGroup_Theil, 12_Region_Theil,\n');

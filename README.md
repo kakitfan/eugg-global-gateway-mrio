@@ -4,9 +4,9 @@ This repository contains the model code for analysing how EU Global Gateway
 investment affects global carbon-footprint inequality in a GLORIA-based
 multi-regional input-output framework.
 
-The current public code corresponds to the V6 population-weight rerun used in
-the thesis chapter on global EUGG results. Raw GLORIA matrices and local thesis
-outputs are not included because of file size and data-licensing constraints.
+This repository provides the model method and reproducible code structure only.
+It does not publish model-generated workbooks, figures, numerical results, raw
+GLORIA matrices, or local thesis outputs.
 
 ## What The Model Does
 
@@ -18,39 +18,17 @@ outputs are not included because of file size and data-licensing constraints.
   country-income-group observations.
 - Runs 15 mitigation combinations: 5 sectoral allocations by 3 technology
   transfer levels.
-- Generates publication-ready figures from the model workbook.
-
-## Current Verified Headline Results
-
-Using World Bank 2023 country population weights:
-
-| Metric | Value |
-| --- | ---: |
-| Total EUGG investment | EUR 300B |
-| MRIO coverage | 164 countries x 120 sectors |
-| Valid country-income-group observations | 28,295 |
-| Total GDP induced | EUR 362.5B |
-| Total CO2 induced | 293.9 Mt |
-| EU supply-chain spillover GDP | EUR 62.5B |
-| EU supply-chain spillover CO2 | 27.7 Mt |
-| Global Gini change | +2.22 x 10^-4 |
-| Total Theil T change | -1.65 x 10^-3 |
-| Between-country Theil change | +3.45 x 10^-4 |
-| Within-country Theil change | -2.00 x 10^-3 |
-| Countries with lower domestic Gini | 86 / 164 |
-
-The inequality interpretation is metric-sensitive: global Gini rises, while
-total Theil T falls because within-country compression exceeds the increase in
-the between-country component.
+- Includes plotting code for local reproduction. Generated figures are ignored
+  by Git and are not published in this repository.
 
 ## Repository Layout
 
 ```text
 .
-├── EUGG_model_V6_0.m                         # main MRIO model and scenarios
-├── EUGG_Analysis_V6_0.m                      # extended Theil analysis
-├── EUGG_Figures_V6_0.py                      # 15 global figures
-├── EUGG_Figures_Chapter4_Supplementary.py    # thesis Chapter 4 figures
+├── EUGG_model.m                              # main MRIO model and scenarios
+├── EUGG_analysis.m                           # extended Theil analysis
+├── EUGG_figures.py                           # local figure generation script
+├── chapter4_figures.py                       # local supplementary figure script
 ├── build_country_population_weights.py       # World Bank population weights
 ├── run_pipeline.m                            # MATLAB model + analysis runner
 ├── data/
@@ -58,7 +36,6 @@ the between-country component.
 │   └── mapping/                              # local-only mapping workbook
 ├── docs/
 │   └── model_summary.md
-└── results/                                  # generated locally, not tracked
 ```
 
 ## Required Inputs
@@ -101,11 +78,11 @@ matlab -batch "run('run_pipeline.m')"
 Generate the figure set:
 
 ```bash
-python EUGG_Figures_V6_0.py
-python EUGG_Figures_Chapter4_Supplementary.py
+python EUGG_figures.py
+python chapter4_figures.py
 ```
 
-Generated files are written to:
+Generated local files are written to the ignored `results/` directory:
 
 - `results/Data/EUGG_Results.xlsx`
 - `results/Data/EUGG_Workspace.mat`

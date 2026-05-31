@@ -1,19 +1,19 @@
 % =========================================================================
-% EUGG_model_V6_0.m  |  EU Global Gateway Carbon Inequality Analysis
-% Version 6.0  —  Unified pipeline (V4 + V5 merged)
+% EUGG_model.m  |  EU Global Gateway Carbon Inequality Analysis
+% Unified model pipeline
 %
 % Combines:
-%   [V4.0] Full Theil T decomposition (between/within, shares, residuals,
+%   Full Theil T decomposition (between/within, shares, residuals,
 %          per-country contributions), South Africa sensitivity, EU struct
-%   [V5.0] 5 sector-allocation scenarios (S0–S4), 3 technology transfer
+%   5 sector-allocation scenarios (S0-S4), 3 technology transfer
 %          levels (T0/T25/T10), scenario summary sheets
 %
 % Output: results/Data/EUGG_Results.xlsx (sheets 1-17) + workspace
 %
 % Run order:
-%   1. EUGG_model_V6_0.m    → sheets 1–9, 15–17
-%   2. EUGG_Analysis_V6_0.m → sheets 10–14
-%   3. EUGG_Figures_V6_0.py → all figures
+%   1. EUGG_model.m    → sheets 1–9, 15–17
+%   2. EUGG_analysis.m → sheets 10–14
+%   3. EUGG_figures.py → all figures
 % =========================================================================
 clear; clc; close all;
 tic;
@@ -26,7 +26,7 @@ INPUT_DIR = fullfile(SCRIPT_DIR, 'data', 'input');
 OUTPUT_DIR = fullfile(SCRIPT_DIR, 'results');
 
 fprintf('========================================================\n');
-fprintf('   EUGG Carbon Inequality Analysis - V6.0\n');
+fprintf('   EUGG Carbon Inequality Analysis\n');
 fprintf('   Unified: Theil + Scenarios + Tech Transfer\n');
 fprintf('========================================================\n\n');
 
@@ -56,7 +56,7 @@ SEC_AFOLU        = 1:23;  SEC_ENERGY    = 35:42;
 SEC_TRANSPORT    = 82:85; SEC_HEAVYMFG  = 43:70;
 SEC_CONSTRUCTION = 71;    SEC_SERVICE   = 86:120;
 
-% [V5.0] Sector allocation scenarios
+% Sector allocation scenarios
 % Weights: [AFOLU, Energy, Transport, HeavyMfg, Construction, Service]
 SCENARIOS.S0 = struct('name','Baseline',     'weights',[0.05,0.29,0.17,0.02,0.02,0.45]);
 SCENARIOS.S1 = struct('name','ServiceMax',   'weights',[0.05,0.19,0.17,0.02,0.02,0.55]);
@@ -64,7 +64,7 @@ SCENARIOS.S2 = struct('name','EnergyMax',    'weights',[0.05,0.39,0.17,0.02,0.02
 SCENARIOS.S3 = struct('name','AFOLUMax',     'weights',[0.15,0.19,0.17,0.02,0.02,0.45]);
 SCENARIOS.S4 = struct('name','TransportMax', 'weights',[0.05,0.29,0.27,0.02,0.02,0.35]);
 
-% [V5.0] Technology transfer levels
+% Technology transfer levels
 TECH_NAMES   = {'T0','T25','T10'};
 TECH_PRCTILE = [0, 25, 10];   % 0 = no transfer; 25 = EU P25; 10 = EU P10
 nTech = length(TECH_NAMES);
@@ -214,7 +214,7 @@ c_int(~valid_idx) = 0;
 fprintf('   Done.\n\n');
 
 %% SECTION 2b: EU CO2 INTENSITY BENCHMARKS
-% [V5.0] Compute sector-level EU intensity percentiles for tech transfer
+% Compute sector-level EU intensity percentiles for tech transfer
 fprintf('[SECTION 2b] Computing EU CO2 intensity benchmarks...\n');
 
 EU_sector_int = zeros(nSectors, nEU);
@@ -288,7 +288,7 @@ fprintf('   A_base max column sum:  %.6f\n', col_sum_max);
 I_mat  = speye(N);
 L_base = I_mat / (I_mat - sparse(A_base));
 
-% [V5.0] Pre-compute baseline emission multiplier for each tech level
+% Pre-compute baseline emission multiplier for each tech level
 e_vec_base_variants = cell(nTech, 1);
 for t = 1:nTech
     e_vec_base_variants{t} = c_int_variants{t}' * L_base;
@@ -646,7 +646,7 @@ for sc = 1:length(scenario_names)
         Theil_Within_Base  = sum(country_inc_share_b .* Theil_Within_C_Base);
         Theil_Within_Final = sum(country_inc_share_f .* Theil_Within_C_Final);
 
-        % [V4.0] Theil contribution and share computation
+        % Theil contribution and share computation
         Theil_Contrib_Within_Base  = country_inc_share_b .* Theil_Within_C_Base;
         Theil_Contrib_Within_Final = country_inc_share_f .* Theil_Within_C_Final;
 
@@ -707,7 +707,7 @@ for sc = 1:length(scenario_names)
         R.Global.EU_SpilloverCO2    = EU_SpilloverCO2_Total;
         R.Global.EU_Backflow_by_sector = EU_Backflow_by_sector;
 
-        % [V4.0] Full Theil T decomposition results
+        % Full Theil T decomposition results
         R.Theil.Total_Base       = Theil_Total_Base;
         R.Theil.Total_Final      = Theil_Total_Final;
         R.Theil.Total_Change     = Theil_Total_Final - Theil_Total_Base;
@@ -780,12 +780,12 @@ for sc = 1:length(scenario_names)
             end
             AllResults.S0_T0.Sensitivity = Sens;
 
-            % [V4.0] Alpha sub-dimension placeholder
+            % Alpha sub-dimension placeholder
             AlphaDim = struct('n', 0, 'r', NaN(1,4), 'p', NaN(1,4), ...
                 'labels', {{'HCI','Governance','Infrastructure','Finance'}});
             AllResults.S0_T0.AlphaDim = AlphaDim;
 
-            % [V4.0] EU struct for backward compatibility
+            % EU struct for backward compatibility
             EU_GC  = Gini_C_Final(EU_Indices) - Gini_C_Base(EU_Indices);
             EU_GB  = Gini_C_Base(EU_Indices);
             EU_GF  = Gini_C_Final(EU_Indices);
@@ -965,7 +965,7 @@ if isfield(R0, 'Sensitivity')
     writetable(T_Sens, fname_xlsx, 'Sheet','7_Sensitivity');
 end
 
-% [V4.0] Sheet 8: Global Theil T decomposition summary (6 rows)
+% Sheet 8: Global Theil T decomposition summary (6 rows)
 T_Theil_Global = table();
 T_Theil_Global.Metric = { ...
     'Theil_T_Total'; 'Theil_T_Between'; 'Theil_T_Within'; ...
@@ -979,7 +979,7 @@ T_Theil_Global.PostInvestment = [ ...
 T_Theil_Global.Change = T_Theil_Global.PostInvestment - T_Theil_Global.Baseline;
 writetable(T_Theil_Global, fname_xlsx, 'Sheet','8_Theil_Global');
 
-% [V4.0] Sheet 9: Per-country Theil decomposition (with Contrib columns)
+% Sheet 9: Per-country Theil decomposition (with Contrib columns)
 T_Theil_Country = table();
 T_Theil_Country.ID              = (1:nCountries)';
 T_Theil_Country.Country         = R0.Country.Names;
@@ -1000,7 +1000,7 @@ T_Theil_Country.Contrib_Change  = R0.Theil.Country_Contrib_Change;
 writetable(T_Theil_Country, fname_xlsx, 'Sheet','9_Theil_Countries');
 
 % =====================================================================
-% B. [V5.0] Scenario summary sheet (all 15 combinations)
+% B. Scenario summary sheet (all 15 combinations)
 % =====================================================================
 fprintf('   Writing scenario summary...\n');
 
@@ -1030,7 +1030,7 @@ end
 writetable(T_Summary, fname_xlsx, 'Sheet','15_Scenario_Summary');
 
 % =====================================================================
-% C. [V5.0] Per-country Gini change matrix across scenarios
+% C. Per-country Gini change matrix across scenarios
 % =====================================================================
 fprintf('   Writing per-country Gini matrix...\n');
 
@@ -1051,7 +1051,7 @@ end
 writetable(T_CGini, fname_xlsx, 'Sheet','16_Country_Gini_Scenarios');
 
 % =====================================================================
-% D. [V5.0] Per-country CO2 change matrix across scenarios
+% D. Per-country CO2 change matrix across scenarios
 % =====================================================================
 fprintf('   Writing per-country CO2 matrix...\n');
 
@@ -1090,7 +1090,7 @@ fprintf('   Workspace: %s\n\n', fname_mat);
 %% SECTION 10: REPORT
 elapsed = toc;
 fprintf('========================================================\n');
-fprintf('              V6.0 UNIFIED ANALYSIS REPORT\n');
+fprintf('              EUGG ANALYSIS REPORT\n');
 fprintf('========================================================\n');
 
 % Baseline (S0_T0) summary

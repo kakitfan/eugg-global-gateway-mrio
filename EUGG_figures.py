@@ -1,7 +1,7 @@
 """
-EUGG_Figures_V6_0.py  |  Unified thesis figure generation
+EUGG_figures.py  |  Local figure generation
 =========================================================================
-Workflow:  EUGG_model_V6_0.m  ->  EUGG_Analysis_V6_0.m  ->  THIS SCRIPT
+Workflow:  EUGG_model.m  ->  EUGG_analysis.m  ->  THIS SCRIPT
 
 Input:  results/Data/EUGG_Results.xlsx  (sheets 1-17)
 Output: results/Figures/  (PNG @ 300 DPI + PDF)
@@ -25,10 +25,10 @@ Figures (15):
     09  Investment vs domestic inequality   -- EUGG dosage-response
     10  Between-country ranking            -- top/bottom drivers of international gap
     11  EU27 spillover                     -- supply-chain spillover + EU domestic Gini impact
-    12  Scenario heatmap (dGini + CO2)     -- [V5.0] mitigation scenario overview
-    13  CO2 vs dGini trade-off scatter     -- [V5.0] emission-inequality frontier
-    14  Theil decomposition across scen.   -- [V5.0] between/within by scenario
-    15  Country-level dGini distribution   -- [V5.0] distribution shift
+    12  Scenario heatmap (dGini + CO2)     -- mitigation scenario overview
+    13  CO2 vs dGini trade-off scatter     -- emission-inequality frontier
+    14  Theil decomposition across scen.   -- between/within by scenario
+    15  Country-level dGini distribution   -- distribution shift
 =========================================================================
 """
 
@@ -222,7 +222,7 @@ def load_all():
     d["T8"]  = pd.read_excel(XLSX_PATH, sheet_name="8_Theil_Global")
     d["T9"]  = pd.read_excel(XLSX_PATH, sheet_name="9_Theil_Countries")
 
-    # Analysis sheets (from EUGG_Analysis_V6_0.m)
+    # Analysis sheets (from EUGG_analysis.m)
     for sname in ["10b_Between_Ranked", "11_IncGroup_Theil", "12_Region_Theil",
                    "13_TripleAsymm_4D", "14_Lorenz"]:
         key = "T" + sname.split("_")[0]
@@ -1156,7 +1156,7 @@ def fig15_country_distribution(d):
 # =========================================================================
 if __name__ == "__main__":
     print("=" * 65)
-    print("  EUGG_Figures_V6_0.py -- Unified figure generation (15 figures)")
+    print("  EUGG_figures.py -- local figure generation (15 figures)")
     print("=" * 65 + "\n")
 
     D = load_all()

@@ -7,5 +7,5 @@ if isempty(repo_dir)
 end
 cd(repo_dir);
 
-run(fullfile(repo_dir, 'EUGG_model_V6_0.m'));
-run(fullfile(repo_dir, 'EUGG_Analysis_V6_0.m'));
+run(fullfile(repo_dir, 'EUGG_model.m'));
+run(fullfile(repo_dir, 'EUGG_analysis.m'));
